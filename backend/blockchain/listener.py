@@ -1,4 +1,5 @@
 import asyncio
+from bson.decimal128 import Decimal128
 from backend.blockchain.client import casino_contract, w3
 from backend.db.database import db
 
@@ -19,16 +20,16 @@ async def listen_for_deposits(poll_interval=3):
                 for log in logs:
                     user_address = log['args']['user']
                     amount_wei = log['args']['amount']
-                    amount_eth = float(w3.from_wei(amount_wei, 'ether'))
-
                     checksum_address = w3.to_checksum_address(user_address)
+
 
                     await db.users.update_one(
                         {"wallet_address": checksum_address},
-                        {"$inc": {"balance": amount_eth}},
+                        {"$inc": {"balance": Decimal128(str(amount_wei))}},
                         upsert=True
                     )
-                    print(f"Deposit processed: {checksum_address} +{amount_eth} ETH")
+
+                    print(f"Deposit processed: {checksum_address} +{amount_wei} WEI")
 
                 LAST_PROCESSED_BLOCK = current_block
 
@@ -36,7 +37,6 @@ async def listen_for_deposits(poll_interval=3):
             print(f"Listener error: {e}")
 
         await asyncio.sleep(poll_interval)
-
 
 async def start_event_listener():
     print(f"Listener started from block {LAST_PROCESSED_BLOCK}...")

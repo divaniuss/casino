@@ -27,12 +27,11 @@ checksum_address = w3.to_checksum_address(CONTRACT_ADDRESS)
 casino_contract = w3.eth.contract(address=checksum_address, abi=contract_abi)
 
 
-def get_vault_balance_eth() -> float:
+def get_vault_balance_wei() -> int:
     try:
         balance_wei = casino_contract.functions.getVaultBalance().call({'from': admin_address})
-        balance_eth = w3.from_wei(balance_wei, 'ether')
-        return float(balance_eth)
+        return balance_wei
     except Exception as e:
-        print(f"Ошибка при получении баланса: {e}")
-        return 0.0
+        print(f"Ошибка при получении баланса пула: {e}")
+        return 0
 
