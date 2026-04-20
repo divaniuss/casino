@@ -28,7 +28,7 @@ def create_jwt_token(data: dict):
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 def generate_sign_message(nonce: str) -> str:
-    return f"Welcome to Beer Shop\n\nNonce: {nonce}"
+    return f"Sign this message to authenticate.\nNonce: {nonce}"
 
 @router.get("/nonce/{wallet_address}")
 @limiter.limit("5/minute")
