@@ -7,6 +7,8 @@ from backend.blockchain.worker import process_withdrawals, verify_withdrawals
 from backend.api import auth
 from backend.db.database import db_manager
 from backend.api.games import dice
+from backend.api.games import slots
+from backend.api.games import crash
 from backend.api import wallet
 from backend.api import users
 
@@ -44,5 +46,7 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(dice.router)
+app.include_router(slots.router)
+app.include_router(crash.router)
 app.include_router(wallet.router)
 app.include_router(users.router)
